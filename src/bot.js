@@ -109,16 +109,18 @@ async function processAnswer(recipient, selectedOption) {
 }
 
 async function allQuestionsAnswered(recipient) {
+  console.log("innn");
   await client.sendMessage(
     recipient,
     "Thank you for answering all the questions!"
   );
+  console.log("ran");
 
   // Send a message to 8971640963
-  await client.sendMessage(
-    "8971640963",
-    `User ${recipient} has answered all the questions.`
-  );
+  //   await client.sendMessage(
+  //     "8971640963",
+  //     `User ${recipient} has answered all the questions.`
+  //   );
 
   closedUsers.push(recipient); // Add the recipient to the closedUsers array
 }
