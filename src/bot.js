@@ -29,7 +29,7 @@ const questions = [
 
 const clientOptions = {
   puppeteer: {
-    headless: true,
+    headless: false,
   },
 };
 
