@@ -1,9 +1,7 @@
-const express = require("express");
-const { Client, Message } = require("whatsapp-web.js");
+const { Client } = require("whatsapp-web.js");
 const qrcode = require("qrcode");
 const { createReadStream } = require("fs");
 
-// Define the questions and options
 const questions = [
   {
     question: "Question 1: What is your favorite color?",
@@ -27,17 +25,11 @@ const questions = [
   },
 ];
 
-const clientOptions = {
-  puppeteer: {
-    headless: false,
-  },
-};
-
-const client = new Client(clientOptions);
+const client = new Client();
 
 let qrCodePath;
-let currentQuestionIndex = 0; // Variable to track the current question index
-const closedUsers = []; // Array to store closed users
+let currentQuestionIndex = 0;
+const closedUsers = [];
 
 client.on("qr", async (qrCodeData) => {
   console.log("QR Code:", qrCodeData);
@@ -114,19 +106,16 @@ async function allQuestionsAnswered(recipient) {
     "Thank you for answering all the questions!"
   );
 
-  // Send a message to 8971640963
-  //   await client.sendMessage(
-  //     "8971640963",
-  //     `User ${recipient} has answered all the questions.`
-  //   );
-
-  closedUsers.push(recipient); // Add the recipient to the closedUsers array
+  closedUsers.push(recipient);
 }
 
+client.initialize();
+
+// Optional: Serve the QR code image on a web server
+const express = require("express");
 const app = express();
 const port = 3000;
 
-// Serve the QR code image on the root URL
 app.get("/", (req, res) => {
   if (qrCodePath) {
     res.writeHead(200, { "Content-Type": "image/png" });
@@ -135,8 +124,6 @@ app.get("/", (req, res) => {
     res.send("QR code is not available yet. Please try again later.");
   }
 });
-
-client.initialize();
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
